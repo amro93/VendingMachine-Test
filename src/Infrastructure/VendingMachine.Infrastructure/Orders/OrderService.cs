@@ -8,6 +8,7 @@ using VendingMachine.Application.Localization;
 using VendingMachine.Application.Logging;
 using VendingMachine.Application.Repositories;
 using VendingMachine.Application.Services;
+using VendingMachine.Domain.Core;
 using VendingMachine.Domain.Entities;
 using VendingMachine.Domain.Enums;
 
@@ -31,12 +32,11 @@ namespace VendingMachine.Infrastructure.Orders
             _currentCurreny = currentCurreny;
         }
 
-        public long? CreateNewOrder()
+        public IResultTemplate<long> CreateNewOrder()
         {
-            if(_currentOrder.CurrentOrderId.HasValue)
+            if (_currentOrder.CurrentOrderId.HasValue)
             {
-                _logger.LogTranslatedError("Current order is not closed please try {0} command", "CLOSE");
-                return null;
+                return ResultTemplate<long>.FailedResult("Current order is not closed please try {0} command", "CLOSE");
             }
             var order = new Order
             {
@@ -46,17 +46,18 @@ namespace VendingMachine.Infrastructure.Orders
             };
             _orderRepository.Create(order);
             _orderRepository.SaveChanges();
-            return order.Id;
+            return ResultTemplate<long>.SucceededResult(order.Id);
         }
 
-        public void CloseAllOrders()
+        public IResultTemplate CloseAllOrders()
         {
             var openOrders = _orderRepository.GetOpenedOrdersQuery();
-            foreach(var order in openOrders)
+            foreach (var order in openOrders)
             {
                 order.State = OrderState.Closed;
             }
             _orderRepository.SaveChanges();
+            return ResultTemplate.SucceededResult();
         }
     }
 }

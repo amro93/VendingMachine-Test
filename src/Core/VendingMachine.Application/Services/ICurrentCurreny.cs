@@ -1,8 +1,10 @@
-﻿namespace VendingMachine.Application.Services
+﻿using VendingMachine.Domain.Core;
+
+namespace VendingMachine.Application.Services
 {
     public interface ICurrentCurreny
     {
         public string Unit { get; }
-        public void SetCurrentUnit(string currencyUnit);
+        public IResultTemplate SetCurrentUnit(string currencyUnit);
     }
 }

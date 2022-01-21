@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Application.Localization;
+using VendingMachine.Domain.Core;
 
 namespace VendingMachine.Application.Logging
 {
@@ -60,6 +61,7 @@ namespace VendingMachine.Application.Logging
         public void LogTranslatedCritical(Exception exception, string message, params object[] args)
         {
             message = _localizationService.Translate(message);
+            _logger.LogCritical(exception, message, args);
         }
 
         public void LogTranslatedCritical(string message, params object[] args)
@@ -176,6 +178,31 @@ namespace VendingMachine.Application.Logging
         {
             message = _localizationService.Translate(message);
             _logger.LogWarning(message, args);
+        }
+
+        public void LogTranslatedResultMessage(IResultTemplate result)
+        {
+            if (result == null) return;
+            var logLevel = result.Succeeded ? LogLevel.Information : LogLevel.Error;
+            var strBuilder = new StringBuilder();
+            if(result?.Message != null)
+            {
+                var translatedMsg = _localizationService.Translate(result.Message);
+                strBuilder.AppendFormat(translatedMsg, result.MessageArgs);
+            }
+            var messageLines = result.GetMessageLines();
+            if ((messageLines?.Count ?? 0) > 0)
+            {
+                if(result.Message != null) strBuilder.AppendLine();
+                foreach(var msgLine in messageLines.Where(t => t?.Message != null))
+                {
+                    var translatedMsgLine = _localizationService.Translate(msgLine.Message);
+                    strBuilder.AppendFormat(translatedMsgLine, msgLine.Args);
+                    strBuilder.AppendLine();
+                }
+            }
+            var translatedStr = strBuilder.ToString();
+            _logger.Log(logLevel, translatedStr);
         }
     }
 }

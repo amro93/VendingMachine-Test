@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VendingMachine.Domain.Core;
 
 namespace VendingMachine.Application.Logging
 {
@@ -356,6 +357,8 @@ namespace VendingMachine.Application.Logging
         //   args:
         //     An object array that contains zero or more objects to format.
         public void LogTranslatedInformation(string message, params object[] args);
+        void LogTranslatedResultMessage(IResultTemplate result);
+
         //
         // Summary:
         //     Formats and writes a trace log message.

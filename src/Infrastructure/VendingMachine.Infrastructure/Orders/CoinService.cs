@@ -8,6 +8,7 @@ using VendingMachine.Application.Localization;
 using VendingMachine.Application.Logging;
 using VendingMachine.Application.Repositories;
 using VendingMachine.Application.Services;
+using VendingMachine.Domain.Core;
 
 namespace VendingMachine.Infrastructure.Orders
 {
@@ -30,37 +31,37 @@ namespace VendingMachine.Infrastructure.Orders
             _currentOrder = currentOrder;
             _orderRepository = orderRepository;
         }
-        public bool AddCoin(decimal amount)
+        public IResultTemplate AddCoin(decimal amount)
         {
-            if (!ValidateAmount(amount)) return false;
+            var amountValidationResult = ValidateAmount(amount);
+            if (!amountValidationResult.Succeeded) return amountValidationResult;
             var currentOrderId = _currentOrder.CurrentOrderId;
-            if(!currentOrderId.HasValue)
+            if (!currentOrderId.HasValue)
             {
                 _logger.LogTranslatedError("Please create a new order");
-                return false;
+                throw new ArgumentNullException(nameof(currentOrderId));
             }
             var currentOrder = _orderRepository.GetQuerryable().First(t => t.Id == currentOrderId);
             currentOrder.Balance += amount;
             var savedCols = _orderRepository.SaveChanges();
-            _logger.LogTranslatedInformation("Current amount = {0}{1}", amount.ToString("0.00"), _currentCurreny.Unit);
-            return savedCols > 0;
+            var result = new ResultTemplate
+            {
+                Succeeded = savedCols > 0,
+            };
+            result.AppendMessageLine(new("Amount Entered: {0}{1}", amount.ToString("0.00"), _currentCurreny.Unit))
+                .AppendMessageLine(new())
+                .AppendMessageLine(new("Total balance: {0}{1}", currentOrder.Balance.ToString("0.00"), _currentCurreny.Unit));
+            return result;
         }
 
-        private bool ValidateAmount(decimal amount)
+        private IResultTemplate ValidateAmount(decimal amount)
         {
-            if(amount == 0)
-            {
-                _logger.LogTranslatedError("You didn't enter any coins");
-                return false;
-            }
-            if(amount % 0.05m > 0)
-            {
-                var currenyUnit = _currentCurreny.Unit;
-                _logger.LogTranslatedError("Coin value must be 0.05{0} and it's multiples", currenyUnit);
-                return false;
-            }
+            if (amount <= 0 || amount > 2m) return ResultTemplate.FailedResult("Coin value must be larger than 0 and less than 2");
+            var currenyUnit = _currentCurreny.Unit;
 
-            return true;
+            if (amount % 0.05m > 0) return ResultTemplate.FailedResult("Coin value must be 0.05{0} and it's multiples", currenyUnit);
+
+            return ResultTemplate.SucceededResult();
         }
     }
 }

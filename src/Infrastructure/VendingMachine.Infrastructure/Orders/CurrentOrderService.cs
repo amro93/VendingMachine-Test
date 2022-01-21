@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Application.Repositories;
 using VendingMachine.Application.Services;
+using VendingMachine.Domain.Core;
 using VendingMachine.Domain.Enums;
 using VendingMachine.Shared.Orders;
 
@@ -20,7 +21,7 @@ namespace VendingMachine.Infrastructure.Orders
         }
         public long? CurrentOrderId => _orderRepository.GetOpenedOrdersQuery().Select(t => (long?)t.Id).FirstOrDefault();
 
-        public CurrentOrderDto GetCurrentOrderDetails()
+        public IResultTemplate<CurrentOrderDto> GetCurrentOrderDetails()
         {
             var query = _orderRepository.GetOpenedOrdersQuery()
                 .Select(t => new CurrentOrderDto
@@ -42,7 +43,11 @@ namespace VendingMachine.Infrastructure.Orders
                     }).ToList()
                 });
             var result = query.FirstOrDefault();
-            return result;
+            return new ResultTemplate<CurrentOrderDto>
+            {
+                Succeeded = true,
+                Data = result
+            };
         }
     }
 }

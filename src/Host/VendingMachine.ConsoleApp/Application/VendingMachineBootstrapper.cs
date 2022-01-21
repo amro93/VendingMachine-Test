@@ -26,7 +26,6 @@ namespace VendingMachine.ConsoleApp.Application
 
             _logger.LogTranslatedInformation("Creating new order");
             _orderService.CreateNewOrder();
-            _coinService.AddCoin(0.15m);
         }
     }
 }

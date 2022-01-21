@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace VendingMachine.ConsoleApp.Commands
 {
-    public interface ICommandFactory
+    public interface ICommandHandlerFactory
     {
+        ICommandHandler GetCommandHandler(string command);
     }
 }

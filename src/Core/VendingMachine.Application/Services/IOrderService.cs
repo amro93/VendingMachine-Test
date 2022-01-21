@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using VendingMachine.Domain.Core;
 
 namespace VendingMachine.Application.Services
 {
     public interface IOrderService
     {
-        void CloseAllOrders();
+        IResultTemplate CloseAllOrders();
 
         /// <summary>
         /// Create new order
         /// </summary>
         /// <returns>Current order id</returns>
-        long? CreateNewOrder();
+        IResultTemplate<long> CreateNewOrder();
     }
 }
