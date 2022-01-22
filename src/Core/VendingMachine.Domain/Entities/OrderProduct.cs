@@ -14,7 +14,6 @@ namespace VendingMachine.Domain.Entities
         public Product Product { get; set; }
         public long OrderId { get; set; }
         public Order Order { get; set; }
-        public int Quantity { get; set; }
         public bool IsDisposed { get; set; }
     }
 }

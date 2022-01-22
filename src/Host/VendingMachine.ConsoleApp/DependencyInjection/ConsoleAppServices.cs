@@ -11,6 +11,7 @@ using VendingMachine.Shared.Configurations;
 using VendingMachine.Application.DependencyInjection;
 using VendingMachine.Prisistence.DependencyInjection;
 using VendingMachine.ConsoleApp.Commands;
+using VendingMachine.ConsoleApp.Commands.Handlers;
 
 namespace VendingMachine.ConsoleApp.DependencyInjection
 {
@@ -26,13 +27,18 @@ namespace VendingMachine.ConsoleApp.DependencyInjection
             services.AddSingleton<IConfiguration>(configuration);
             services.AddScoped<IApplicationBootstrapper, VendingMachineBootstrapper>();
             services.AddScoped<IConsoleApp, VendingMachineApplicaiton>();
-            services.AddScoped<ICommandHandler, EnterCommandHandler>();
             services.AddScoped<ICommandHandlerFactory, CommandHandlerFactory>();
             services.AddScoped<IResultProcessorService, ResultProcessorService>();
             services.Configure<VendingMachineConfiguration>(t =>
             {
                 
             });
+
+            services.AddScoped<ICommandHandler, EnterCommandHandler>();
+            services.AddScoped<ICommandHandler, LanguageCommandHandler>();
+            services.AddScoped<ICommandHandler, ShowCommandHandler>();
+            services.AddScoped<ICommandHandler, SelectCommandHandler>();
+
             return services;
         }
     }

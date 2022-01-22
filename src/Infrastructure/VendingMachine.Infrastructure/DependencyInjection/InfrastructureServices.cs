@@ -13,6 +13,7 @@ using VendingMachine.Application.Localization;
 using VendingMachine.Application.Services;
 using VendingMachine.Infrastructure.Orders;
 using VendingMachine.Infrastructure.Currencies;
+using VendingMachine.Infrastructure.Products;
 
 namespace VendingMachine.Infrastructure.DependencyInjection
 {
@@ -36,6 +37,7 @@ namespace VendingMachine.Infrastructure.DependencyInjection
             services.AddTransient<ICoinService, CoinService>();
             services.AddTransient<ICurrentCurreny, CurrentCurrencyService>();
             services.AddTransient<ICurrentOrder, CurrentOrderService>();
+            services.AddTransient<IProductService, ProductService>();
             return services;
         }
 

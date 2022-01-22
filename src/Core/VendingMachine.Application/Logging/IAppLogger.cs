@@ -10,6 +10,7 @@ namespace VendingMachine.Application.Logging
 {
     public interface IAppLogger<T>
     {
+        void LogResultMessage(IResultTemplate result);
         public void LogTranslated(LogLevel logLevel, EventId eventId, Exception exception, string message, params object[] args);
 
         //

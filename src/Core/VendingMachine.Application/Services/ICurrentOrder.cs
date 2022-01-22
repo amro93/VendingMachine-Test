@@ -12,5 +12,8 @@ namespace VendingMachine.Application.Services
     {
         public long? CurrentOrderId { get; }
         public IResultTemplate<CurrentOrderDto> GetCurrentOrderDetails();
+        public IResultTemplate AddProduct(long productId);
+        public IResultTemplate CancelOrder();
+        IResultTemplate Close();
     }
 }

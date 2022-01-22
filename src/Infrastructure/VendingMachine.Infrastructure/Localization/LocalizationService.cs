@@ -1,7 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,8 +34,9 @@ namespace VendingMachine.Infrastructure.Localization
         public string Translate(string message)
         {
             var defaultCulture = _configuration.GetValue<string>("DefaultCulture");
-            var cultureName = _vendingMachineConfigurationOption.CurrentCultureName?? defaultCulture;
-            if (cultureName == defaultCulture) return message;
+            
+            var cultureName = _vendingMachineConfigurationOption.CurrentCultureName ?? defaultCulture;
+            if (cultureName.ToLower() == defaultCulture.ToLower() || string.IsNullOrWhiteSpace(message)) return message;
             var txtMsg = message;
 
             bool canTranslateFromResource;
@@ -58,6 +61,7 @@ namespace VendingMachine.Infrastructure.Localization
         public void SetCurrentCulture(string cultureName)
         {
             _vendingMachineConfigurationOption.CurrentCultureName = cultureName;
+            CultureInfo.CurrentCulture = new CultureInfo(_vendingMachineConfigurationOption.CurrentCultureName);
         }
     }
 }

@@ -61,7 +61,7 @@ namespace VendingMachine.ConsoleApp.Application
 
         private (string key, string[] parameters) ProcessCommand(string command)
         {
-            var commandsArray = command.Split(" ").Where(str => !string.IsNullOrEmpty(str));
+            var commandsArray = command?.Split(" ")?.Where(str => !string.IsNullOrEmpty(str)) ?? Array.Empty<string>();
             var cmdKey = commandsArray.FirstOrDefault();
             var cmdParams = commandsArray.Skip(1).ToArray();
             return (cmdKey, cmdParams);

@@ -49,7 +49,6 @@ namespace VendingMachine.Infrastructure.Orders
                 Succeeded = savedCols > 0,
             };
             result.AppendMessageLine(new("Amount Entered: {0}{1}", amount.ToString("0.00"), _currentCurreny.Unit))
-                .AppendMessageLine(new())
                 .AppendMessageLine(new("Total balance: {0}{1}", currentOrder.Balance.ToString("0.00"), _currentCurreny.Unit));
             return result;
         }

@@ -8,6 +8,7 @@ namespace VendingMachine.Application.Localization
 {
     public interface ILocalizationService
     {
+        void SetCurrentCulture(string cultureName);
         string Translate(string message);
     }
 }

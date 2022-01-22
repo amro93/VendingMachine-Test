@@ -13,7 +13,8 @@ namespace VendingMachine.Shared.Configurations
             CurrentCultureName = "en";
             CurrentCurrencyUnit = "EUR";
         }
-        public string CurrentCultureName { get; set; }
+        private string currentCultureName;
+        public string CurrentCultureName { get => currentCultureName; set => currentCultureName = value.ToLower(); }
         public string CurrentCurrencyUnit { get; set; }
     }
 }

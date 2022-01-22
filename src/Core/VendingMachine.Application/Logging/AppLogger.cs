@@ -196,8 +196,32 @@ namespace VendingMachine.Application.Logging
                 if(result.Message != null) strBuilder.AppendLine();
                 foreach(var msgLine in messageLines.Where(t => t?.Message != null))
                 {
-                    var translatedMsgLine = _localizationService.Translate(msgLine.Message);
-                    strBuilder.AppendFormat(translatedMsgLine, msgLine.Args);
+                    var msgLineStr = msgLine.Message;
+                    if(!msgLine.SkipLocalize) msgLineStr = _localizationService.Translate(msgLine.Message);
+                    strBuilder.AppendFormat(msgLineStr, msgLine.Args);
+                    strBuilder.AppendLine();
+                }
+            }
+            var translatedStr = strBuilder.ToString();
+            if(!string.IsNullOrWhiteSpace(translatedStr)) _logger.Log(logLevel, translatedStr);
+        }
+
+        public void LogResultMessage(IResultTemplate result)
+        {
+            if (result == null) return;
+            var logLevel = result.Succeeded ? LogLevel.Information : LogLevel.Error;
+            var strBuilder = new StringBuilder();
+            if (result?.Message != null)
+            {
+                strBuilder.AppendFormat(result.Message, result.MessageArgs);
+            }
+            var messageLines = result.GetMessageLines();
+            if ((messageLines?.Count ?? 0) > 0)
+            {
+                if (result.Message != null) strBuilder.AppendLine();
+                foreach (var msgLine in messageLines.Where(t => t?.Message != null))
+                {
+                    strBuilder.AppendFormat(msgLine.Message, msgLine.Args);
                     strBuilder.AppendLine();
                 }
             }

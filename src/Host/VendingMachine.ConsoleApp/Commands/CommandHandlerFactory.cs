@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using VendingMachine.Application.Logging;
+using VendingMachine.ConsoleApp.Commands.Handlers;
 
 namespace VendingMachine.ConsoleApp.Commands
 {
@@ -21,7 +22,7 @@ namespace VendingMachine.ConsoleApp.Commands
 
         public ICommandHandler GetCommandHandler(string commandKey)
         {
-            var cmdHandler = _commandHandlers.FirstOrDefault(t => t.CommandKey.ToUpper() == commandKey.ToUpper());
+            var cmdHandler = _commandHandlers.FirstOrDefault(t => t.CommandKey.ToUpper() == commandKey?.ToUpper());
             if (cmdHandler == null)
             {
                 _logger.LogTranslatedError("Command {0} not found, enter {1} to list all available commands", commandKey, "HELP");

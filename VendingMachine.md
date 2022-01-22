@@ -24,7 +24,7 @@ The point of this exercise is to make use of design patterns, SOLID principles a
 Features
 ========
 
-Accept Coins
+Accept Coins // done
 ------------
   
 _As a customer_  
@@ -40,7 +40,7 @@ When there are no coins inserted, the machine displays INSERT COIN.
 
 NOTE: We will assume all coins entered by user are in same currency than Vending machine. Cents are represented by two digits decimals i.e. 0.10 for 10cts.
 
-Show Products
+Show Products // done
 --------------
 _As a customer_  
 _I want to list available products_  
@@ -55,7 +55,7 @@ Chips 0.50€ - 12 Items Left
 Candy 0.65€ - SOLD OUT 
 ```
 
-Select Product
+Select Product // done
 --------------
 
 _As a customer_  
@@ -71,7 +71,7 @@ and the machine displays THANK YOU.
 
 If the user selects again, it will display INSERT COIN and the current amount will be set to 0.00€.  If there is not enough money inserted then the machine displays PRICE and the price of the item and subsequent checks of the display will display
 
-Make Change
+Make Change // done
 -----------
 
 _As a customer_  
@@ -92,7 +92,7 @@ _So that I can change my mind about buying stuff from the vending machine_
 
 When the command `RETURN COINS`, the money the customer has placed in the machine is returned indicating returned money and the display shows INSERT COIN.
 
-Sold Out
+Sold Out // done
 --------
 
 _As a customer_  

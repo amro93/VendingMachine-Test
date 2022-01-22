@@ -11,6 +11,7 @@ namespace VendingMachine.Domain.Core
         
         public string Message { get; set; }
         public object[] Args { get; set; }
+        public bool SkipLocalize { get; set; }
         public ResultMessageLine()
         {
             Message = "";

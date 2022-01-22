@@ -16,6 +16,8 @@ namespace VendingMachine.Prisistence.DependencyInjection
         public static IServiceCollection AddPresistence(this IServiceCollection services)
         {
             services.AddTransient<IOrderRepository, OrderRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrderProductRepository, OrderProductRepository>();
 
             services.AddDbContext<AppDbContext>(t =>
             {
