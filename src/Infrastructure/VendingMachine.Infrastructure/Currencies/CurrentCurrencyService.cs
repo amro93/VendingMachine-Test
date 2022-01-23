@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,17 @@ namespace VendingMachine.Infrastructure.Currencies
     public class CurrentCurrencyService : ICurrentCurreny
     {
         private readonly VendingMachineConfiguration _vendingMachineConfiguration;
+        private readonly IConfiguration _configuration;
 
         public CurrentCurrencyService(
-            IOptions<VendingMachineConfiguration> options)
+            IOptions<VendingMachineConfiguration> options,
+            IConfiguration configuration)
         {
             _vendingMachineConfiguration = options.Value;
+            _configuration = configuration;
         }
 
-        public string Unit => _vendingMachineConfiguration.CurrentCurrencyUnit;
+        public string Unit => _configuration.GetValue<string>("CurrencyUnit", "EUR");
 
         public IResultTemplate SetCurrentUnit(string currencyUnit)
         {

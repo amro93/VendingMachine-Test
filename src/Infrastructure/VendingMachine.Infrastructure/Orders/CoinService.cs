@@ -55,7 +55,9 @@ namespace VendingMachine.Infrastructure.Orders
 
         private IResultTemplate ValidateAmount(decimal amount)
         {
-            if (amount <= 0 || amount > 2m) return ResultTemplate.FailedResult("Coin value must be larger than 0 and less than 2");
+            if (amount == 0) return ResultTemplate.FailedResult("INSERT COIN");
+            else if (amount <= 0 || amount > 2m)
+                return ResultTemplate.FailedResult("Coin value must be larger than 0 and less than 2");
             var currenyUnit = _currentCurreny.Unit;
 
             if (amount % 0.05m > 0) return ResultTemplate.FailedResult("Coin value must be 0.05{0} and it's multiples", currenyUnit);

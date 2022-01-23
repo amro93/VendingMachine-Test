@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,10 +15,13 @@ namespace VendingMachine.Infrastructure.Products
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IConfiguration _configuration;
 
-        public ProductService(IProductRepository productRepository)
+        public ProductService(IProductRepository productRepository,
+            IConfiguration configuration)
         {
             _productRepository = productRepository;
+            _configuration = configuration;
         }
         public IResultTemplate Create(ProductCreateDto dto)
         {
@@ -25,8 +29,12 @@ namespace VendingMachine.Infrastructure.Products
             {
                 throw new ArgumentNullException(nameof(dto));
             }
+            var totalProductsCnt = _productRepository.GetQuerryable().Count();
+            var totalSlots = _configuration.GetValue<int>("NoOfSlots", 3);
 
-            var entity = new Product
+            if (totalProductsCnt >= totalSlots) throw new ArgumentOutOfRangeException(nameof(totalProductsCnt), $"All {totalSlots} slots are taken");
+
+                var entity = new Product
             {
                 Id = dto.Id,
                 Name = dto.Name,

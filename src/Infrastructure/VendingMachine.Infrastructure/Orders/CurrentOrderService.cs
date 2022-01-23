@@ -39,18 +39,16 @@ namespace VendingMachine.Infrastructure.Orders
             if (!selectedProductResult.Succeeded) return selectedProductResult;
             var selectedProduct = selectedProductResult.Data;
 
-            if (selectedProduct.Quantity <= 0) return ResultTemplate.FailedResult("SOLD OUT");
-
             var currentOrderDetails = GetCurrentOrderDetails().Data;
             var hasBalance = (currentOrderDetails.Balance - selectedProduct.Price) >= 0;
-            if (!hasBalance) return ResultTemplate.FailedResult(
-                 "You don't have enough balance.\n Selected product price = {0}{1}. \n Your current balance = {2}{3}",
-                 selectedProduct.Price,
-                 _currentCurreny.Unit,
-                 currentOrderDetails.Balance,
-                 _currentCurreny.Unit
-                 );
+            if (!hasBalance)
+            {
+                return ResultTemplate.FailedResult("You don't have enough balance.")
+                    .AppendMessageLine(new("Selected product price = {0}{1}.", selectedProduct.Price, _currentCurreny.Unit))
+                    .AppendMessageLine(new("Your current balance = {0}{1}.", currentOrderDetails.Balance, _currentCurreny.Unit));
+            }
 
+            if (selectedProduct.Quantity <= 0) return ResultTemplate.FailedResult("SOLD OUT");
             _orderProductRepository.Create(new OrderProduct
             {
                 OrderId = currentOrderDetails.Id,
@@ -62,6 +60,7 @@ namespace VendingMachine.Infrastructure.Orders
             // Query order again
             currentOrderDetails = GetCurrentOrderDetails().Data;
 
+            CloseCurrentOrder();
             var result = ResultTemplate.SucceededResult("Product {0}.{1} selected", productId, selectedProduct.Name);
             if (currentOrderDetails.Balance > 0)
             {
@@ -72,18 +71,34 @@ namespace VendingMachine.Infrastructure.Orders
 
         public IResultTemplate CancelOrder()
         {
-            throw new NotImplementedException();
+            var currentOrderResult = GetCurrentOrderDetails();
+            var currentOrderDetails = currentOrderResult.Data;
+            var returnedBalance = 0m;
+
+            var orderEntity = _orderRepository.GetQuerryable().FirstOrDefault(t => t.Id == currentOrderDetails.Id);
+            if (orderEntity.Balance > 0)
+            {
+                returnedBalance = orderEntity.Balance;
+                orderEntity.Balance = 0;
+                _orderRepository.SaveChanges();
+                return ResultTemplate.SucceededResult("Please take coins: {0}{1}", returnedBalance, _currentCurreny.Unit)
+                    .AppendMessageLine(new("INSERT COIN"));
+            }
+            return ResultTemplate.SucceededResult("No coins to be returned");
         }
 
-        public IResultTemplate Close()
+        public IResultTemplate CloseCurrentOrder()
         {
-            throw new NotImplementedException();
+            var orderService = _serviceProvider.GetRequiredService<IOrderService>();
+            var currentOrderId = CurrentOrderId;
+            if (currentOrderId.HasValue) return orderService.CloseOrder(currentOrderId.Value);
+            return ResultTemplate.FailedResult("Can't close order with id = {0}", currentOrderId);
         }
 
-        public IResultTemplate DisposeOrderItems()
-        {
-            throw new NotImplementedException();
-        }
+        //public IResultTemplate DisposeOrderItems()
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public IResultTemplate<CurrentOrderDto> GetCurrentOrderDetails()
         {
@@ -106,11 +121,8 @@ namespace VendingMachine.Infrastructure.Orders
                     }).ToList()
                 });
             var result = query.FirstOrDefault();
-            return new ResultTemplate<CurrentOrderDto>
-            {
-                Succeeded = true,
-                Data = result
-            };
+            if (result == null) throw new ArgumentNullException("Current Order");
+            return ResultTemplate<CurrentOrderDto>.SucceededResult(result);
         }
     }
 }

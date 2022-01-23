@@ -59,5 +59,14 @@ namespace VendingMachine.Infrastructure.Orders
             _orderRepository.SaveChanges();
             return ResultTemplate.SucceededResult();
         }
+
+        public IResultTemplate CloseOrder(long orderId)
+        {
+            var order = _orderRepository.GetQuerryable().FirstOrDefault(t => t.Id == orderId);
+            if (order == null) return ResultTemplate.FailedResult("Order not found at Id = {0}", orderId);
+            order.State = OrderState.Closed;
+            _orderRepository.SaveChanges();
+            return CreateNewOrder();
+        }
     }
 }

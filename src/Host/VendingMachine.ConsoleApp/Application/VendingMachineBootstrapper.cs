@@ -9,18 +9,19 @@ namespace VendingMachine.ConsoleApp.Application
         private readonly IAppLogger<VendingMachineBootstrapper> _logger;
         private readonly IOrderService _orderService;
         private readonly ICoinService _coinService;
-        private readonly IProductService _productService;
+        private readonly IDBSeedService _dBSeedService;
 
         public VendingMachineBootstrapper(
             IAppLogger<VendingMachineBootstrapper> logger,
             IOrderService orderService,
             ICoinService coinService,
-            IProductService productService)
+            IDBSeedService dBSeedService
+            )
         {
             _logger = logger;
             _orderService = orderService;
             _coinService = coinService;
-            _productService = productService;
+            _dBSeedService = dBSeedService;
         }
         public void Setup()
         {
@@ -30,26 +31,7 @@ namespace VendingMachine.ConsoleApp.Application
 
             _logger.LogTranslatedInformation("Creating new order");
             _orderService.CreateNewOrder();
-            _productService.Create(new ProductCreateDto
-            {
-                Name = "COLA",
-                Price = 1,
-                Quantity = 8
-            });
-
-            _productService.Create(new ProductCreateDto
-            {
-                Name = "Chips",
-                Price = 0.50m,
-                Quantity = 12
-            });
-
-            _productService.Create(new ProductCreateDto
-            {
-                Name = "Candy",
-                Price = 0.65m,
-                Quantity = 0
-            });
+            _dBSeedService.Seed();
         }
     }
 }

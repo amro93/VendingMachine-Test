@@ -29,6 +29,7 @@ namespace VendingMachine.ConsoleApp.DependencyInjection
             services.AddScoped<IConsoleApp, VendingMachineApplicaiton>();
             services.AddScoped<ICommandHandlerFactory, CommandHandlerFactory>();
             services.AddScoped<IResultProcessorService, ResultProcessorService>();
+            services.AddTransient<IDBSeedService, StaticDBSeedService>();
             services.Configure<VendingMachineConfiguration>(t =>
             {
                 
@@ -38,6 +39,9 @@ namespace VendingMachine.ConsoleApp.DependencyInjection
             services.AddScoped<ICommandHandler, LanguageCommandHandler>();
             services.AddScoped<ICommandHandler, ShowCommandHandler>();
             services.AddScoped<ICommandHandler, SelectCommandHandler>();
+            services.AddScoped<ICommandHandler, HelpCommandHandler>();
+            services.AddScoped<ICommandHandler, ReturnCoinsCommandHandler>();
+
 
             return services;
         }

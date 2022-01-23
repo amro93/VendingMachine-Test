@@ -21,7 +21,11 @@ namespace VendingMachine.ConsoleApp.Application
 
         public void PrintTranslatedMessage(IResultTemplate result)
         {
-            if (result == null) return;
+            if (result is null)
+            {
+                throw new System.ArgumentNullException(nameof(result));
+            }
+
             _logger.LogTranslatedResultMessage(result);
         }
     }

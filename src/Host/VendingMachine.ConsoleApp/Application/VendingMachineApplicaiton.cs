@@ -1,11 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using VendingMachine.Application.Localization;
 using VendingMachine.Application.Logging;
 using VendingMachine.Application.Services;
 using VendingMachine.ConsoleApp.Commands;
+using VendingMachine.Domain.Core;
 using VendingMachine.Shared.Configurations;
 
 namespace VendingMachine.ConsoleApp.Application
@@ -54,8 +57,16 @@ namespace VendingMachine.ConsoleApp.Application
         {
             _logger.LogTranslatedInformation("Enter a Command: ");
             var command = Console.ReadLine();
+            IResultTemplate result = null;
             var (cmdKey, cmdParams) = ProcessCommand(command);
-            var result = _commandHandlerFactory.GetCommandHandler(cmdKey)?.Handle(cmdParams);
+            var cmdHandlerResult = _commandHandlerFactory.GetCommandHandler(cmdKey);
+            if(cmdHandlerResult?.Succeeded == true) result = cmdHandlerResult?.Data?.Handle(cmdParams);
+            else
+            {
+                cmdHandlerResult = _commandHandlerFactory.GetCommandHandler(command);
+                if (cmdHandlerResult == null || !cmdHandlerResult.Succeeded) result = cmdHandlerResult;
+                else result = cmdHandlerResult?.Data?.Handle(Array.Empty<string>());
+            }
             _resultProcessorService.PrintTranslatedMessage(result);
         }
 

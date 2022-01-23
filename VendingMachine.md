@@ -83,7 +83,7 @@ in the coin return.
 
 Display a message before THANK YOU indicating returned money i.e. Please take your change: 0.10cts
 
-Return Coins
+Return Coins // done
 ------------
 
 _As a customer_  
@@ -107,7 +107,7 @@ Product 1 - 15
 Product 2 - 10
 Product 3 - 20
 
-Exact Change Only
+Exact Change Only // didn't get it !!
 -----------------
 
 _As a customer_  
@@ -138,6 +138,4 @@ Vending machine when can be change by user in different languages than English, 
 Command from user could be `LANGUAGE <EN|DE|FR>`
 
 All messages shown to user will be in this new selected language. For simplicity commands will stay as-is.
-
-
 
