@@ -13,6 +13,7 @@ namespace VendingMachine.Prisistence.DbContexts
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<OrderProduct> OrderProducts { get; set; }
+        public DbSet<CoinFamily> CoinFamilies { get; set; }
 
         public AppDbContext(DbContextOptions options) : base(options)
         {
@@ -39,6 +40,11 @@ namespace VendingMachine.Prisistence.DbContexts
                 o.HasKey(t => t.Id);
                 o.HasOne(t => t.Order).WithMany(t => t.OrderProducts).HasForeignKey(t => t.OrderId);
                 o.HasOne(t => t.Product).WithMany(t => t.OrderProducts).HasForeignKey(t => t.ProductId);
+            });
+
+            builder.Entity<CoinFamily>(o =>
+            {
+                o.HasKey(t => t.Name);
             });
         }
     }

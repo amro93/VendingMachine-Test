@@ -22,7 +22,7 @@ namespace VendingMachine.ConsoleApp.Commands.Handlers
         {
             var parseResult = ParseParameters(args);
             if (!parseResult.Succeeded) return parseResult;
-            return _currentOrder.AddProduct(parseResult.Data);
+            return _currentOrder.SelectProduct(parseResult.Data);
         }
 
         private IResultTemplate<int> ParseParameters(string[] args)

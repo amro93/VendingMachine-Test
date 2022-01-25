@@ -32,7 +32,7 @@ namespace VendingMachine.Infrastructure.Orders
         }
         public long? CurrentOrderId => _orderRepository.GetOpenedOrdersQuery().Select(t => (long?)t.Id).FirstOrDefault();
 
-        public IResultTemplate AddProduct(long productId)
+        public IResultTemplate SelectProduct(long productId)
         {
             var productService = _serviceProvider.GetRequiredService<IProductService>();
             var selectedProductResult = productService.GetById(productId);
@@ -43,7 +43,7 @@ namespace VendingMachine.Infrastructure.Orders
             var hasBalance = (currentOrderDetails.Balance - selectedProduct.Price) >= 0;
             if (!hasBalance)
             {
-                return ResultTemplate.FailedResult("You don't have enough balance.")
+                return ResultTemplate.FailedResult("EXACT CHANGE ONLY")
                     .AppendMessageLine(new("Selected product price = {0}{1}.", selectedProduct.Price, _currentCurrency.Unit))
                     .AppendMessageLine(new("Your current balance = {0}{1}.", currentOrderDetails.Balance, _currentCurrency.Unit));
             }
@@ -60,11 +60,22 @@ namespace VendingMachine.Infrastructure.Orders
             // Query order again
             currentOrderDetails = GetCurrentOrderDetails().Data;
 
-            CloseCurrentOrder();
+            var closeOrderResult = CloseCurrentOrder();
+            if (!closeOrderResult.Succeeded) return closeOrderResult;
+
             var result = ResultTemplate.SucceededResult("Product {0}.{1} selected", productId, selectedProduct.Name);
             if (currentOrderDetails.Balance > 0)
             {
-                result.AppendMessageLine(new("Please take change: {0}{1}", currentOrderDetails.Balance, _currentCurrency.Unit));
+                var coinFamilyService = _serviceProvider.GetRequiredService<ICoinFamilyService>();
+                var exactChangeResult = coinFamilyService.GetExactChange(currentOrderDetails.Balance);
+                foreach(var coin in exactChangeResult.Coins)
+                {
+                    coinFamilyService.RemoveCoin(new() { CoinFamilyId = coin.CoinFamilyId, RemovedQuantity = coin.Count });
+                }
+                if (exactChangeResult.ExactChange > 0)
+                    result.AppendMessageLine(new("Please take change: {0}{1}", exactChangeResult.ExactChange, _currentCurrency.Unit));
+                if (exactChangeResult.ExactChange != currentOrderDetails.Balance)
+                    result.AppendMessageLine(new("EXACT CHANGE ONLY"));
             }
             return result.AppendMessageLine(new("Thank You"));
         }

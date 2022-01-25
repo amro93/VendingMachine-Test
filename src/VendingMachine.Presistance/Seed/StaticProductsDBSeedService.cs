@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using VendingMachine.Application.Services;
+﻿using VendingMachine.Application.Services;
 using VendingMachine.Shared.Products;
 
-namespace VendingMachine.ConsoleApp.Application
+namespace VendingMachine.Persistence.Seed
 {
-    public interface IDBSeedService
-    {
-        void Seed();
-    }
-
-    public class StaticDBSeedService : IDBSeedService
+    public class StaticProductsDBSeedService : IDBSeedService
     {
         private readonly IProductService _productService;
 
-        public StaticDBSeedService(
+        public StaticProductsDBSeedService(
             IProductService productService)
         {
             _productService = productService;
@@ -44,14 +34,6 @@ namespace VendingMachine.ConsoleApp.Application
                 Price = 0.65m,
                 Quantity = 0
             });
-        }
-    }
-
-    public class CsvDBSeedService : IDBSeedService
-    {
-        public void Seed()
-        {
-
         }
     }
 }

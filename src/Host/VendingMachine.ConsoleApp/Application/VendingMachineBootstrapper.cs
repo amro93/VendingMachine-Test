@@ -1,4 +1,5 @@
-﻿using VendingMachine.Application.Logging;
+﻿using System.Collections.Generic;
+using VendingMachine.Application.Logging;
 using VendingMachine.Application.Services;
 using VendingMachine.Shared.Products;
 
@@ -9,19 +10,19 @@ namespace VendingMachine.ConsoleApp.Application
         private readonly IAppLogger<VendingMachineBootstrapper> _logger;
         private readonly IOrderService _orderService;
         private readonly ICoinService _coinService;
-        private readonly IDBSeedService _dBSeedService;
+        private readonly IEnumerable<IDBSeedService> _dBSeedServices;
 
         public VendingMachineBootstrapper(
             IAppLogger<VendingMachineBootstrapper> logger,
             IOrderService orderService,
             ICoinService coinService,
-            IDBSeedService dBSeedService
+            IEnumerable<IDBSeedService> dBSeedServices
             )
         {
             _logger = logger;
             _orderService = orderService;
             _coinService = coinService;
-            _dBSeedService = dBSeedService;
+            _dBSeedServices = dBSeedServices;
         }
         public void Setup()
         {
@@ -31,7 +32,15 @@ namespace VendingMachine.ConsoleApp.Application
 
             _logger.LogTranslatedInformation("Creating new order");
             _orderService.CreateNewOrder();
-            _dBSeedService.Seed();
+
+            _logger.LogTranslatedInformation("Seeding Data");
+
+            foreach (var svc in _dBSeedServices)
+            {
+                svc.Seed();
+            }
+
+            _logger.LogTranslatedInformation("Done Seeding");
         }
     }
 }
