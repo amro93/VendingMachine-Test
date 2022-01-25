@@ -11,18 +11,17 @@ namespace VendingMachine.ConsoleApp.Commands.Handlers
     public class ShowCommandHandler : ICommandHandler
     {
         private readonly IProductService _productService;
-        private readonly ICurrentCurreny _currentCurreny;
+        private readonly ICurrentCurrency _currentCurrency;
 
         public ShowCommandHandler(IProductService productService,
-            ICurrentCurreny currentCurreny)
+            ICurrentCurrency currentCurrency)
         {
             _productService = productService;
-            _currentCurreny = currentCurreny;
+            _currentCurrency = currentCurrency;
         }
         public string CommandKey => "SHOW";
 
-        public string CommandDescription => @"{0}
-Lists all products";
+        public string CommandDescription => @"{0} Lists all products";
 
         public IResultTemplate Handle(string[] args)
         {
@@ -33,7 +32,7 @@ Lists all products";
 
             foreach (var prod in productsResult?.Data ?? new List<ProductListDto>())
             {
-                var currencyUnit = _currentCurreny.Unit;
+                var currencyUnit = _currentCurrency.Unit;
                 if (prod.Quantity > 0)
                 {
                     productsResult.AppendMessageLine(new("{0}. {1} {2}{3} - {4} Item Left", prod.Id, prod.Name, prod.Price, currencyUnit, prod.Quantity));

@@ -16,17 +16,17 @@ namespace VendingMachine.Infrastructure.Orders
     public class CurrentOrderService : ICurrentOrder
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly ICurrentCurreny _currentCurreny;
+        private readonly ICurrentCurrency _currentCurrency;
         private readonly IOrderProductRepository _orderProductRepository;
         private readonly IServiceProvider _serviceProvider;
 
         public CurrentOrderService(IOrderRepository orderRepository,
-            ICurrentCurreny currentCurreny,
+            ICurrentCurrency currentCurrency,
             IOrderProductRepository orderProductRepository,
             IServiceProvider serviceProvider)
         {
             _orderRepository = orderRepository;
-            _currentCurreny = currentCurreny;
+            _currentCurrency = currentCurrency;
             _orderProductRepository = orderProductRepository;
             _serviceProvider = serviceProvider;
         }
@@ -44,8 +44,8 @@ namespace VendingMachine.Infrastructure.Orders
             if (!hasBalance)
             {
                 return ResultTemplate.FailedResult("You don't have enough balance.")
-                    .AppendMessageLine(new("Selected product price = {0}{1}.", selectedProduct.Price, _currentCurreny.Unit))
-                    .AppendMessageLine(new("Your current balance = {0}{1}.", currentOrderDetails.Balance, _currentCurreny.Unit));
+                    .AppendMessageLine(new("Selected product price = {0}{1}.", selectedProduct.Price, _currentCurrency.Unit))
+                    .AppendMessageLine(new("Your current balance = {0}{1}.", currentOrderDetails.Balance, _currentCurrency.Unit));
             }
 
             if (selectedProduct.Quantity <= 0) return ResultTemplate.FailedResult("SOLD OUT");
@@ -64,24 +64,24 @@ namespace VendingMachine.Infrastructure.Orders
             var result = ResultTemplate.SucceededResult("Product {0}.{1} selected", productId, selectedProduct.Name);
             if (currentOrderDetails.Balance > 0)
             {
-                result.AppendMessageLine(new("Please take change: {0}{1}", currentOrderDetails.Balance, _currentCurreny.Unit));
+                result.AppendMessageLine(new("Please take change: {0}{1}", currentOrderDetails.Balance, _currentCurrency.Unit));
             }
             return result.AppendMessageLine(new("Thank You"));
         }
 
         public IResultTemplate CancelOrder()
         {
-            var currentOrderResult = GetCurrentOrderDetails();
-            var currentOrderDetails = currentOrderResult.Data;
+            var currentOrderId = CurrentOrderId;
             var returnedBalance = 0m;
 
-            var orderEntity = _orderRepository.GetQuerryable().FirstOrDefault(t => t.Id == currentOrderDetails.Id);
+            var orderEntity = _orderRepository.GetQuerryable().FirstOrDefault(t => t.Id == currentOrderId);
+            if (orderEntity == null) throw new ArgumentNullException(nameof(orderEntity), $"Order at id = {currentOrderId} not found");
             if (orderEntity.Balance > 0)
             {
                 returnedBalance = orderEntity.Balance;
                 orderEntity.Balance = 0;
                 _orderRepository.SaveChanges();
-                return ResultTemplate.SucceededResult("Please take coins: {0}{1}", returnedBalance, _currentCurreny.Unit)
+                return ResultTemplate.SucceededResult("Please take coins: {0}{1}", returnedBalance, _currentCurrency.Unit)
                     .AppendMessageLine(new("INSERT COIN"));
             }
             return ResultTemplate.SucceededResult("No coins to be returned");

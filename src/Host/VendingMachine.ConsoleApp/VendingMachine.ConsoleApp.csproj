@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -17,7 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\VendingMachine.Application\VendingMachine.Application.csproj" />
     <ProjectReference Include="..\..\Infrastructure\VendingMachine.Infrastructure\VendingMachine.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\VendingMachine.Presistance\VendingMachine.Presistence.csproj" />
+    <ProjectReference Include="..\..\VendingMachine.Presistance\VendingMachine.Persistence.csproj" />
     <ProjectReference Include="..\..\VendingMachine.Shared\VendingMachine.Shared.csproj" />
   </ItemGroup>
 

@@ -2,7 +2,7 @@
 using VendingMachine.Domain.Entities;
 using VendingMachine.Prisistence.DbContexts;
 
-namespace VendingMachine.Presistence.Repositories
+namespace VendingMachine.Persistence.Repositories
 {
     public class OrderProductRepository : RepositoryBase<OrderProduct>, IOrderProductRepository
     {

@@ -19,17 +19,17 @@ namespace VendingMachine.Infrastructure.Orders
         private readonly ICurrentOrder _currentOrder;
         private readonly IAppLogger<OrderService> _logger;
         private readonly IOrderRepository _orderRepository;
-        private readonly ICurrentCurreny _currentCurreny;
+        private readonly ICurrentCurrency _currentCurrency;
 
         public OrderService(ICurrentOrder currentOrder,
             IAppLogger<OrderService> logger,
             IOrderRepository orderRepository,
-            ICurrentCurreny currentCurreny)
+            ICurrentCurrency currentCurrency)
         {
             _currentOrder = currentOrder;
             _logger = logger;
             _orderRepository = orderRepository;
-            _currentCurreny = currentCurreny;
+            _currentCurrency = currentCurrency;
         }
 
         public IResultTemplate<long> CreateNewOrder()
@@ -42,7 +42,7 @@ namespace VendingMachine.Infrastructure.Orders
             {
                 State = OrderState.Opened,
                 Date = DateTime.UtcNow,
-                CurrencyUnit = _currentCurreny.Unit,
+                CurrencyUnit = _currentCurrency.Unit,
             };
             _orderRepository.Create(order);
             _orderRepository.SaveChanges();

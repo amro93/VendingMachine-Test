@@ -29,9 +29,8 @@ namespace VendingMachine.ConsoleApp.Commands.Handlers
             _logger = logger;
         }
         public string CommandKey => "ENTER";
-        public string CommandDescription => @"{0} <XXX> 
-Enter coin to the vending machine, it will accept valid coins (5cts to 2€) and reject invalid ones (1 and 2 cts).
-All coins entered by user are in same currency than Vending machine. Cents are represented by two digits decimals i.e. 0.10 for 10cts."
+        public string CommandDescription => "{0} [XXX] Enter coin to the vending machine, it will accept valid coins (5cts to 2€) and reject invalid ones (1 and 2 cts). " +
+            "All coins entered by user are in same currency than Vending machine. Cents are represented by two digits decimals i.e. 0.10 for 10cts."
             ;
 
         public IResultTemplate Handle(string[] args)

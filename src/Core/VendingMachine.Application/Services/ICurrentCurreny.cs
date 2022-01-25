@@ -2,7 +2,7 @@
 
 namespace VendingMachine.Application.Services
 {
-    public interface ICurrentCurreny
+    public interface ICurrentCurrency
     {
         public string Unit { get; }
         //public IResultTemplate SetCurrentUnit(string currencyUnit);

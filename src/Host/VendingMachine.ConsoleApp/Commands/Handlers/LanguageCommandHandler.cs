@@ -21,8 +21,7 @@ namespace VendingMachine.ConsoleApp.Commands.Handlers
         }
         public string CommandKey => "LANGUAGE";
 
-        public string CommandDescription => @"LANGUAGE <EN|DE|FR>
-Change application language";
+        public string CommandDescription => @"{0} [EN|DE|FR] Change application language";
 
         public IResultTemplate Handle(string[] args)
         {

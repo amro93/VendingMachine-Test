@@ -15,19 +15,19 @@ namespace VendingMachine.Infrastructure.Orders
     public class CoinService : ICoinService
     {
         private readonly IAppLogger<CoinService> _logger;
-        private readonly ICurrentCurreny _currentCurreny;
+        private readonly ICurrentCurrency _currentCurrency;
         private readonly ICurrentOrder _currentOrder;
         private readonly IOrderRepository _orderRepository;
 
         public CoinService(
             IAppLogger<CoinService> logger,
-            ICurrentCurreny currentCurreny,
+            ICurrentCurrency currentCurrency,
             ICurrentOrder currentOrder,
             IOrderRepository orderRepository
             )
         {
             _logger = logger;
-            _currentCurreny = currentCurreny;
+            _currentCurrency = currentCurrency;
             _currentOrder = currentOrder;
             _orderRepository = orderRepository;
         }
@@ -48,8 +48,8 @@ namespace VendingMachine.Infrastructure.Orders
             {
                 Succeeded = savedCols > 0,
             };
-            result.AppendMessageLine(new("Amount Entered: {0}{1}", amount.ToString("0.00"), _currentCurreny.Unit))
-                .AppendMessageLine(new("Total balance: {0}{1}", currentOrder.Balance.ToString("0.00"), _currentCurreny.Unit));
+            result.AppendMessageLine(new("Amount Entered: {0}{1}", amount.ToString("0.00"), _currentCurrency.Unit))
+                .AppendMessageLine(new("Total balance: {0}{1}", currentOrder.Balance.ToString("0.00"), _currentCurrency.Unit));
             return result;
         }
 
@@ -58,9 +58,9 @@ namespace VendingMachine.Infrastructure.Orders
             if (amount == 0) return ResultTemplate.FailedResult("INSERT COIN");
             else if (amount <= 0 || amount > 2m)
                 return ResultTemplate.FailedResult("Coin value must be larger than 0 and less than 2");
-            var currenyUnit = _currentCurreny.Unit;
+            var currencyUnit = _currentCurrency.Unit;
 
-            if (amount % 0.05m > 0) return ResultTemplate.FailedResult("Coin value must be 0.05{0} and it's multiples", currenyUnit);
+            if (amount % 0.05m > 0) return ResultTemplate.FailedResult("Coin value must be 0.05{0} and it's multiples", currencyUnit);
 
             return ResultTemplate.SucceededResult();
         }

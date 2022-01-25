@@ -7,7 +7,7 @@ using VendingMachine.Application.Repositories;
 using VendingMachine.Domain.Entities;
 using VendingMachine.Prisistence.DbContexts;
 
-namespace VendingMachine.Presistence.Repositories
+namespace VendingMachine.Persistence.Repositories
 {
     public abstract class RepositoryBase<T> : IRepository<T> where T : class, IBaseEntity
     {

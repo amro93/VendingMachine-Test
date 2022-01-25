@@ -21,7 +21,7 @@ namespace VendingMachine.ConsoleApp.DependencyInjection
         {
             services.AddApplication();
             services.AddInfrastructure();
-            services.AddPresistence();
+            services.AddPersistence();
             services.AddAppLogging();
             var configuration = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
             services.AddSingleton<IConfiguration>(configuration);

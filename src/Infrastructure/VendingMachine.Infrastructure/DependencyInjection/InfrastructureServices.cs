@@ -35,7 +35,7 @@ namespace VendingMachine.Infrastructure.DependencyInjection
             services.AddTransient<ILocalizationService, LocalizationService>();
             services.AddTransient<IOrderService, OrderService>();
             services.AddTransient<ICoinService, CoinService>();
-            services.AddTransient<ICurrentCurreny, CurrentCurrencyService>();
+            services.AddTransient<ICurrentCurrency, CurrentCurrencyService>();
             services.AddTransient<ICurrentOrder, CurrentOrderService>();
             services.AddTransient<IProductService, ProductService>();
             return services;

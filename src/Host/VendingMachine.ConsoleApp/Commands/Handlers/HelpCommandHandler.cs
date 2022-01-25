@@ -18,8 +18,7 @@ namespace VendingMachine.ConsoleApp.Commands.Handlers
         }
         public string CommandKey => "HELP";
 
-        public string CommandDescription => @"{0}
-Shows help text";
+        public string CommandDescription => @"{0} Shows help text";
 
         public IResultTemplate Handle(string[] args)
         {
@@ -30,7 +29,7 @@ Shows help text";
             foreach (var cmdHandler in commandHandlers)
             {
                 result.AppendMessageLine(new(cmdHandler.CommandDescription, cmdHandler.CommandKey)).
-                    AppendMessageLine(new("==========================================="));
+                    AppendMessageLine(new("===========================================") { SkipLocalize = true});
             }
             return result;
         }

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using VendingMachine.Prisistence.DbContexts;
 using VendingMachine.Application.Repositories;
-using VendingMachine.Presistence.Repositories;
+using VendingMachine.Persistence.Repositories;
 
 namespace VendingMachine.Prisistence.DependencyInjection
 {
-    public static class PresistenceServices
+    public static class PersistenceServices
     {
-        public static IServiceCollection AddPresistence(this IServiceCollection services)
+        public static IServiceCollection AddPersistence(this IServiceCollection services)
         {
             services.AddTransient<IOrderRepository, OrderRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();

@@ -11,8 +11,7 @@ namespace VendingMachine.ConsoleApp.Commands.Handlers
 
         public string CommandKey => "SELECT";
 
-        public string CommandDescription => @"{0} <NUMBER>
-Select product by number";
+        public string CommandDescription => @"{0} [NUMBER] Select product by number";
 
         public SelectCommandHandler(ICurrentOrder currentOrder)
         {

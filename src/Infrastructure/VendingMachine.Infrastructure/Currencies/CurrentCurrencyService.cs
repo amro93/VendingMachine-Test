@@ -11,7 +11,7 @@ using VendingMachine.Shared.Configurations;
 
 namespace VendingMachine.Infrastructure.Currencies
 {
-    public class CurrentCurrencyService : ICurrentCurreny
+    public class CurrentCurrencyService : ICurrentCurrency
     {
         private readonly VendingMachineConfiguration _vendingMachineConfiguration;
         private readonly IConfiguration _configuration;
